@@ -1,0 +1,90 @@
+
+
+class Employee:
+    company_name = "TechCrop Solutions"
+    total_employees = 0
+    pf_percentage = 12.0
+    Min_salary = 15000
+    Max_salary = 500000
+    def __init__(self,emp_id,name,department,salary,pan):
+        self._emp_id = emp_id
+        self.name = name
+        self._department = department
+        self.salary = salary
+        self.__pan = pan
+        Employee.total_employees += 1
+
+    @property
+    def pan(self):
+        return self.__pan
+    
+
+    @property
+    def salary(self):
+        return self._salary
+    
+    @salary.setter
+    def salary(self,value):
+        if not isinstance(value,(int,float)):
+            raise TypeError("Salary must be a number")
+        if value < self.Min_salary or value> self.Max_salary:
+            raise ValueError(f"Salary must be between {self.Min_salary} and {self.Max_salary}")
+        self._salary=value
+
+    @property
+    def emp_id(self):
+        return self._emp_id
+
+    def transfer_department(self, new_department):
+        print(f"{self.name} is moving from {self._department} to {new_department}")
+        self._department = new_department
+
+    def apply_hike(self,percent):
+        if percent <0 or percent>50:
+            raise ValueError("Hike percentage must be between 0 and 50")
+        self.salary += (self.salary * percent / 100)
+        return self.salary
+
+
+    def calculate_pf(self):
+        return self.salary * (self.pf_percentage / 100)
+
+    @classmethod
+    def get_total_employees(cls):
+        return cls.total_employees
+
+    @staticmethod
+    def is_valid_salary(amount):
+        return Employee.Min_salary <= amount <= Employee.Max_salary
+
+    def __str__(self):
+        return f"Employee[{self._emp_id}] {self.name} | {self._department} | Rs.{self.salary}"
+
+
+def main():
+    print(f"Company:{Employee.company_name}")
+    print(f" Employees Before: {Employee.get_total_employees()}")
+    e1 = Employee(101,"Ravi Kumar","Engineering",60000,	"ABCDE1234F")
+    e2 = Employee(102,"Anita Sharma","Finance",75000,"ABCDE1234F")
+    print(e1)
+    print(e2)
+    print(f" Employees After: {Employee.get_total_employees()}")
+    print(f"PF for e1: {e1.calculate_pf()}")
+    print(f"After 10% Hike: {e1.apply_hike(10)}")
+    e1.transfer_department("Data Science")
+    print(f"is valid salary (9000):{Employee.is_valid_salary(9000)}")
+    try:
+       e3 = Employee(103,"Suresh Reddy","HR",5000,"ABCDE1234F")
+    except ValueError as e:
+        print(f"Blocked: {e}")
+    try :
+        e2.emp_id = 200
+    except AttributeError as e:
+            print(f"Blocked: {e}")
+    print(f"protected : {e1._department}")
+    print(f"private : {e1.pan}")
+    
+
+if __name__ == "__main__":
+    main()
+    
